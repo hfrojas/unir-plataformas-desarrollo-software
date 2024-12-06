@@ -4,26 +4,52 @@
  */
 package com.pharmacare.pharma.order.manager.view;
 
+import com.pharmacare.pharma.order.manager.model.PharmacyOrder;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import org.apache.commons.lang3.StringUtils;
+
 /**
  *
  * @author hrojas
  */
 public class PharmaOrderForm extends javax.swing.JFrame {
 
+    private OrderSummaryForm orderSummaryFrame;
+
     /**
      * Creates new form PharmaOrderForm
      */
     public PharmaOrderForm() {
         initComponents();
-        
-       
-        btgDistributor.add(rbtCofarma);
-        btgDistributor.add(rbtEmpsephar);
-        btgDistributor.add(rbtCemefar);
-        
+        orderSummaryFrame = new OrderSummaryForm();
     }
     
+    private String getSelectedDistributor() {      
+        if (rbtCofarma.isSelected()) {
+            return "Cofarma";
+        } else if (rbtEmpsephar.isSelected()) {
+            return "Empsephar";
+        } else if (rbtCemefar.isSelected()) {
+            return "Cemefar";
+        } else {
+            return "";
+        }
+    }
     
+    private void resetLabelColors() {
+        lblNameMedicine.setForeground(Color.BLACK);
+        lblTypeMedicine.setForeground(Color.BLACK);
+        lblRequiredQuantity.setForeground(Color.BLACK);
+        lblDistributor.setForeground(Color.BLACK);
+        lblSubsidiary.setForeground(Color.BLACK);
+    }
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,12 +72,17 @@ public class PharmaOrderForm extends javax.swing.JFrame {
         rbtCofarma = new javax.swing.JRadioButton();
         rbtEmpsephar = new javax.swing.JRadioButton();
         rbtCemefar = new javax.swing.JRadioButton();
+        lblSubsidiary = new javax.swing.JLabel();
+        chbPrincipal = new javax.swing.JCheckBox();
+        chbSecondary = new javax.swing.JCheckBox();
+        btnConfirm = new javax.swing.JButton();
+        btnClean = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblWelcome = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PharmaCare - Toma de Pedidos");
-        setPreferredSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(700, 500));
 
         lblNameMedicine.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         lblNameMedicine.setText("Nombre del medicamento");
@@ -92,6 +123,33 @@ public class PharmaOrderForm extends javax.swing.JFrame {
         rbtCemefar.setText("Cemefar");
         rbtCemefar.setName("rbtCemefar"); // NOI18N
 
+        lblSubsidiary.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        lblSubsidiary.setText("Sucursal farmacia");
+        lblSubsidiary.setName("lblSubsidiary"); // NOI18N
+
+        chbPrincipal.setText("Principal");
+        chbPrincipal.setToolTipText("Principal");
+        chbPrincipal.setName("chbPrincipal"); // NOI18N
+
+        chbSecondary.setText("Secundaria");
+        chbSecondary.setName("chbSecondary"); // NOI18N
+
+        btnConfirm.setText("Confirmar");
+        btnConfirm.setName("btnConfirm"); // NOI18N
+        btnConfirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmActionPerformed(evt);
+            }
+        });
+
+        btnClean.setText("Borrar");
+        btnClean.setName("btnClean"); // NOI18N
+        btnClean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCleanActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -102,9 +160,16 @@ public class PharmaOrderForm extends javax.swing.JFrame {
                     .addComponent(lblNameMedicine)
                     .addComponent(lblTypeMedicine)
                     .addComponent(lblRequiredQuantity)
-                    .addComponent(lblDistributor))
+                    .addComponent(lblDistributor)
+                    .addComponent(lblSubsidiary))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnConfirm)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnClean))
+                    .addComponent(chbSecondary)
+                    .addComponent(chbPrincipal)
                     .addComponent(rbtCemefar)
                     .addComponent(rbtEmpsephar)
                     .addComponent(rbtCofarma)
@@ -135,9 +200,19 @@ public class PharmaOrderForm extends javax.swing.JFrame {
                     .addComponent(rbtCofarma))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rbtEmpsephar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rbtCemefar)
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSubsidiary)
+                    .addComponent(chbPrincipal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chbSecondary)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnConfirm)
+                    .addComponent(btnClean))
+                .addGap(15, 15, 15))
         );
 
         lblWelcome.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
@@ -167,7 +242,7 @@ public class PharmaOrderForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,22 +250,97 @@ public class PharmaOrderForm extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-  
+    private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
+
+        resetLabelColors();
+        PharmacyOrder order = new PharmacyOrder();
+        order.setNameMedicine(txtNameMedicine.getText());
+        order.setTypeMedicine(cbxTypeMedicine.getSelectedIndex());
+        order.setMedicineTypeName((String) cbxTypeMedicine.getSelectedItem());
+        order.setRequiredQuantity(txtRequiredQuantity.getText());
+        order.setDistributor(getSelectedDistributor());
+        order.setPrincipalPharmacy(chbPrincipal.isSelected());
+        order.setSecondaryPharmacy(chbSecondary.isSelected());
+        
+        if (!order.validate()) {
+            String validationMessages = "Por favor corrija los siguientes campos:\n" + order.getValidationMessages();
+            JOptionPane.showMessageDialog(this, validationMessages, "Error de validación", JOptionPane.ERROR_MESSAGE);
+            resetLabelColors();
+            
+            if (!order.isValidNameMedicine()) {
+                lblNameMedicine.setForeground(Color.RED);
+            }
+            if (!order.isValidTypeMedicine()) {
+                lblTypeMedicine.setForeground(Color.RED);
+            }
+            if (!order.isValidRequiredQuantity()) {
+                lblRequiredQuantity.setForeground(Color.RED);
+            }
+            if (!order.isValidDistributor()) {
+                lblDistributor.setForeground(Color.RED);
+            }
+            if (!order.isValidSubsidiary()) {
+                lblSubsidiary.setForeground(Color.RED);
+            }
+        }else{
+            orderSummaryFrame.setOrder(order);
+            orderSummaryFrame.updateLabels();
+            orderSummaryFrame.setVisible(true);
+            orderSummaryFrame.requestFocus();
+            orderSummaryFrame.setLocationRelativeTo(null);      
+            orderSummaryFrame.setVisible(true);
+        }
+    }//GEN-LAST:event_btnConfirmActionPerformed
+
+    private void btnCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanActionPerformed
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de que desea borrar el formulario?",
+                "Confirmar borrado",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+            txtNameMedicine.setText("");
+            txtRequiredQuantity.setText("");
+
+            cbxTypeMedicine.setSelectedIndex(0);
+            btgDistributor.clearSelection();
+
+            chbPrincipal.setSelected(false);
+            chbSecondary.setSelected(false);
+
+            lblNameMedicine.setForeground(Color.BLACK);
+            lblTypeMedicine.setForeground(Color.BLACK);
+            lblRequiredQuantity.setForeground(Color.BLACK);
+            lblDistributor.setForeground(Color.BLACK);
+            lblSubsidiary.setForeground(Color.BLACK);
+
+            txtNameMedicine.requestFocus();
+        }
+    }//GEN-LAST:event_btnCleanActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup btgDistributor;
+    private javax.swing.JButton btnClean;
+    private javax.swing.JButton btnConfirm;
     private javax.swing.JComboBox<String> cbxTypeMedicine;
+    private javax.swing.JCheckBox chbPrincipal;
+    private javax.swing.JCheckBox chbSecondary;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblDistributor;
     private javax.swing.JLabel lblNameMedicine;
     private javax.swing.JLabel lblRequiredQuantity;
+    private javax.swing.JLabel lblSubsidiary;
     private javax.swing.JLabel lblTypeMedicine;
     private javax.swing.JLabel lblWelcome;
     private javax.swing.JRadioButton rbtCemefar;

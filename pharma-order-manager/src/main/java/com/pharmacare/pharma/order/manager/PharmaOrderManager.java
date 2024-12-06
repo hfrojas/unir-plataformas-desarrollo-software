@@ -6,8 +6,6 @@
 package com.pharmacare.pharma.order.manager;
 
 import com.pharmacare.pharma.order.manager.view.PharmaOrderForm;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 
 /**
  *
