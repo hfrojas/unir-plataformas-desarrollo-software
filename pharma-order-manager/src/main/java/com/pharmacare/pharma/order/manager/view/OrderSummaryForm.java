@@ -5,6 +5,7 @@
 package com.pharmacare.pharma.order.manager.view;
 
 import com.pharmacare.pharma.order.manager.model.PharmacyOrder;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,6 +14,7 @@ import com.pharmacare.pharma.order.manager.model.PharmacyOrder;
 public class OrderSummaryForm extends javax.swing.JFrame {
 
     private PharmacyOrder order;
+    private PharmaOrderForm mainForm;
     
     /**
      * Creates new form OrderSummaryForm
@@ -25,7 +27,11 @@ public class OrderSummaryForm extends javax.swing.JFrame {
         this.order = order;
     }
     
-     public void updateLabels() {
+    public void setMainForm(PharmaOrderForm mainForm) {
+        this.mainForm = mainForm;
+    }
+    
+    public void updateLabels() {
         if (order != null) {
             // Actualizar el título de la ventana con el distribuidor
             String distributor = order.getDistributor() != null ? order.getDistributor() : "Desconocido";
@@ -55,13 +61,13 @@ public class OrderSummaryForm extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lblMedicineInfo = new javax.swing.JLabel();
         lblAddressInfo = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lblDescOrder = new javax.swing.JLabel();
+        lblSendTo = new javax.swing.JLabel();
         btnEnviar = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(500, 300));
+        setPreferredSize(new java.awt.Dimension(600, 300));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -69,15 +75,25 @@ public class OrderSummaryForm extends javax.swing.JFrame {
 
         lblAddressInfo.setText("jLabel1");
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        jLabel1.setText("Descripcion pedido:");
+        lblDescOrder.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        lblDescOrder.setText("Descripcion pedido:");
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        jLabel2.setText("Despachar a:");
+        lblSendTo.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        lblSendTo.setText("Despachar a:");
 
         btnEnviar.setText("Enviar pedido");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
 
         btnCancel.setText("Cancelar pedido");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -88,29 +104,29 @@ public class OrderSummaryForm extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
+                            .addComponent(lblDescOrder)
                             .addComponent(lblMedicineInfo)
-                            .addComponent(jLabel2)
+                            .addComponent(lblSendTo)
                             .addComponent(lblAddressInfo)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(77, 77, 77)
                         .addComponent(btnEnviar)
                         .addGap(60, 60, 60)
                         .addComponent(btnCancel)))
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addContainerGap(129, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel1)
+                .addComponent(lblDescOrder)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblMedicineInfo)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addComponent(lblSendTo)
                 .addGap(18, 18, 18)
                 .addComponent(lblAddressInfo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEnviar)
                     .addComponent(btnCancel))
@@ -122,63 +138,74 @@ public class OrderSummaryForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(OrderSummaryForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(OrderSummaryForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(OrderSummaryForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(OrderSummaryForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        
+        int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de que desea cancelar el pedido?",
+            "Confirmar cancelación",
+            JOptionPane.YES_NO_OPTION
+        );
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+        
+            lblMedicineInfo.setText("");
+            lblAddressInfo.setText("");
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new OrderSummaryForm().setVisible(true);
+            this.setVisible(false);
+
+        
+            if (mainForm != null) {
+                mainForm.setComponentsEnabled(true);
+                mainForm.setVisible(true);
+                mainForm.requestFocus();
             }
-        });
-    }
+        } 
+        
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+        
+        String successMessage = "El pedido ha sido enviado satisfactoriamente.";
+        JOptionPane.showMessageDialog(this, successMessage, "Pedido Enviado", JOptionPane.INFORMATION_MESSAGE);
+        
+        System.out.println(successMessage);
+        lblMedicineInfo.setText("");
+        lblAddressInfo.setText("");
+        this.setVisible(false);
+        
+        if (mainForm != null) {
+            mainForm.setComponentsEnabled(true);
+            mainForm.cleanForm();            
+            mainForm.setVisible(true);
+            mainForm.requestFocus();
+        }
+        
+    }//GEN-LAST:event_btnEnviarActionPerformed
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnEnviar;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAddressInfo;
+    private javax.swing.JLabel lblDescOrder;
     private javax.swing.JLabel lblMedicineInfo;
+    private javax.swing.JLabel lblSendTo;
     // End of variables declaration//GEN-END:variables
 }

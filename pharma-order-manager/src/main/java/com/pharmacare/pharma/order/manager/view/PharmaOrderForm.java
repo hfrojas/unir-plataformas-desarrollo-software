@@ -5,13 +5,13 @@
 package com.pharmacare.pharma.order.manager.view;
 
 import com.pharmacare.pharma.order.manager.model.PharmacyOrder;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import org.apache.commons.lang3.StringUtils;
+import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 /**
  *
@@ -19,14 +19,19 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class PharmaOrderForm extends javax.swing.JFrame {
 
-    private OrderSummaryForm orderSummaryFrame;
+    private OrderSummaryForm orderSummaryForm;
 
     /**
      * Creates new form PharmaOrderForm
      */
     public PharmaOrderForm() {
         initComponents();
-        orderSummaryFrame = new OrderSummaryForm();
+        orderSummaryForm  = new OrderSummaryForm();
+        orderSummaryForm.setMainForm(this);
+        
+        setTextFieldMaxLength(txtNameMedicine, 40);
+        setTextFieldMaxLength(txtRequiredQuantity, 7);
+        
     }
     
     private String getSelectedDistributor() {      
@@ -41,6 +46,25 @@ public class PharmaOrderForm extends javax.swing.JFrame {
         }
     }
     
+    private void setTextFieldMaxLength(JTextField textField, int maxLength) {
+    ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DocumentFilter() {
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            if (fb.getDocument().getLength() + text.length() - length <= maxLength) {
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
+
+        @Override
+        public void insertString(FilterBypass fb, int offset, String text, AttributeSet attrs) throws BadLocationException {
+            if (fb.getDocument().getLength() + text.length() <= maxLength) {
+                super.insertString(fb, offset, text, attrs);
+            }
+        }
+    });
+    }
+
+    
     private void resetLabelColors() {
         lblNameMedicine.setForeground(Color.BLACK);
         lblTypeMedicine.setForeground(Color.BLACK);
@@ -48,6 +72,31 @@ public class PharmaOrderForm extends javax.swing.JFrame {
         lblDistributor.setForeground(Color.BLACK);
         lblSubsidiary.setForeground(Color.BLACK);
     }
+    
+    public void setComponentsEnabled(boolean enabled) {
+        txtNameMedicine.setEnabled(enabled);
+        cbxTypeMedicine.setEnabled(enabled);
+        txtRequiredQuantity.setEnabled(enabled);
+        rbtCofarma.setEnabled(enabled);
+        rbtEmpsephar.setEnabled(enabled);
+        rbtCemefar.setEnabled(enabled);
+        chbPrincipal.setEnabled(enabled);
+        chbSecondary.setEnabled(enabled);
+        btnConfirm.setEnabled(enabled);
+        btnClean.setEnabled(enabled);
+    }
+    
+    public void cleanForm(){
+        txtNameMedicine.setText("");
+        txtRequiredQuantity.setText("");
+        cbxTypeMedicine.setSelectedIndex(0);
+        btgDistributor.clearSelection();
+        chbPrincipal.setSelected(false);
+        chbSecondary.setSelected(false);
+        resetLabelColors();
+        txtNameMedicine.requestFocus();
+    }
+
 
 
 
@@ -82,7 +131,9 @@ public class PharmaOrderForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PharmaCare - Toma de Pedidos");
-        setPreferredSize(new java.awt.Dimension(700, 500));
+        setPreferredSize(new java.awt.Dimension(600, 500));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lblNameMedicine.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         lblNameMedicine.setText("Nombre del medicamento");
@@ -143,7 +194,10 @@ public class PharmaOrderForm extends javax.swing.JFrame {
         });
 
         btnClean.setText("Borrar");
+        btnClean.setMaximumSize(new java.awt.Dimension(84, 22));
+        btnClean.setMinimumSize(new java.awt.Dimension(84, 22));
         btnClean.setName("btnClean"); // NOI18N
+        btnClean.setPreferredSize(new java.awt.Dimension(84, 22));
         btnClean.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCleanActionPerformed(evt);
@@ -167,17 +221,17 @@ public class PharmaOrderForm extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnConfirm)
                         .addGap(18, 18, 18)
-                        .addComponent(btnClean))
+                        .addComponent(btnClean, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(chbSecondary)
                     .addComponent(chbPrincipal)
                     .addComponent(rbtCemefar)
                     .addComponent(rbtEmpsephar)
                     .addComponent(rbtCofarma)
-                    .addComponent(txtNameMedicine, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(txtRequiredQuantity, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(cbxTypeMedicine, javax.swing.GroupLayout.Alignment.LEADING, 0, 141, Short.MAX_VALUE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addComponent(cbxTypeMedicine, javax.swing.GroupLayout.Alignment.LEADING, 0, 141, Short.MAX_VALUE))
+                    .addComponent(txtNameMedicine, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,14 +262,14 @@ public class PharmaOrderForm extends javax.swing.JFrame {
                     .addComponent(chbPrincipal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chbSecondary)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnConfirm)
-                    .addComponent(btnClean))
+                    .addComponent(btnConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClean, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
 
-        lblWelcome.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        lblWelcome.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         lblWelcome.setText("BIENVENIDO A PHARMACARE - TOMA DE PEDIDOS");
         lblWelcome.setName("lblWelcome"); // NOI18N
 
@@ -238,19 +292,23 @@ public class PharmaOrderForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addGap(12, 12, 12)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -289,12 +347,13 @@ public class PharmaOrderForm extends javax.swing.JFrame {
                 lblSubsidiary.setForeground(Color.RED);
             }
         }else{
-            orderSummaryFrame.setOrder(order);
-            orderSummaryFrame.updateLabels();
-            orderSummaryFrame.setVisible(true);
-            orderSummaryFrame.requestFocus();
-            orderSummaryFrame.setLocationRelativeTo(null);      
-            orderSummaryFrame.setVisible(true);
+            setComponentsEnabled(false);
+            orderSummaryForm .setOrder(order);
+            orderSummaryForm .updateLabels();
+            orderSummaryForm .setVisible(true);
+            orderSummaryForm .requestFocus();
+            orderSummaryForm .setLocationRelativeTo(null);      
+            orderSummaryForm .setVisible(true);
         }
     }//GEN-LAST:event_btnConfirmActionPerformed
 
@@ -308,22 +367,7 @@ public class PharmaOrderForm extends javax.swing.JFrame {
         );
 
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-            txtNameMedicine.setText("");
-            txtRequiredQuantity.setText("");
-
-            cbxTypeMedicine.setSelectedIndex(0);
-            btgDistributor.clearSelection();
-
-            chbPrincipal.setSelected(false);
-            chbSecondary.setSelected(false);
-
-            lblNameMedicine.setForeground(Color.BLACK);
-            lblTypeMedicine.setForeground(Color.BLACK);
-            lblRequiredQuantity.setForeground(Color.BLACK);
-            lblDistributor.setForeground(Color.BLACK);
-            lblSubsidiary.setForeground(Color.BLACK);
-
-            txtNameMedicine.requestFocus();
+           cleanForm();
         }
     }//GEN-LAST:event_btnCleanActionPerformed
 
